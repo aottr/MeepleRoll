@@ -1,0 +1,32 @@
+{
+  "name": "meepleroll",
+  "version": "1.0.0",
+  "description": "A Discord bot that picks random board games from your collection. no repeats, no thinking, just play.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/bot.ts",
+    "build": "tsc",
+    "start": "node dist/bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aottr/MeepleRoll.git"
+  },
+  "author": "Alex Ottr <alex@otter.foo>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aottr/MeepleRoll/issues"
+  },
+  "homepage": "https://github.com/aottr/MeepleRoll#readme",
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "dotenv": "^17.2.3",
+    "js-yaml": "^4.1.1",
+    "node-cron": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

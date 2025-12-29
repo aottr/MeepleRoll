@@ -1,0 +1,34 @@
+# MeepleRoll Configuration
+# All settings here can be overridden by environment variables
+
+# Discord Bot Configuration
+# Note: DISCORD_TOKEN must be set in .env file (not here for security)
+# applicationId and channelId should be quoted to avoid precision loss with large numbers
+applicationId: "your_client_id_here"
+channelId: "your_channel_id_here"
+
+# Scheduled Posts Configuration
+# Cron schedule format: minute hour day month day-of-week
+# Example: "0 9 * * 0" = Sunday at 9:00 AM
+# Default: Sunday at 9:00 AM
+cronSchedule: "0 9 * * 0"
+
+# Timezone for scheduled posts
+# Default: Europe/Paris
+timezone: "Europe/Paris"
+
+# Game Selection Defaults
+# Number of games to suggest by default
+defaultGameCount: 3
+
+# Default number of players for filtering
+defaultPlayerCount: 2
+
+# Days threshold for "recently played" games
+# Games played within this many days will be excluded
+daysThreshold: 30
+
+# Maximum values for slash command options
+maxGameCount: 10
+maxPlayerCount: 20
+
