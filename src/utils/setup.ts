@@ -3,6 +3,7 @@ import { BotConfig } from "../types";
 import { buildCommand as buildRollCommand } from "../commands/roll";
 import { buildCommand as buildAddGameCommand } from "../commands/addgame";
 import { buildCommand as buildRemoveGameCommand } from "../commands/removegame";
+import { buildCommand as buildMarkPlayedCommand } from "../commands/markplayed";
 
 export async function getApplicationId(): Promise<string | null> {
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN!);
@@ -31,7 +32,8 @@ export async function registerCommands(config: BotConfig) {
     const commands = [
         buildRollCommand(config),
         buildAddGameCommand(),
-        buildRemoveGameCommand()
+        buildRemoveGameCommand(),
+        buildMarkPlayedCommand()
     ].map(command => command.toJSON());
 
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN!);

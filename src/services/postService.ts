@@ -1,6 +1,6 @@
 import type { Client, TextChannel, NewsChannel, ThreadChannel } from 'discord.js';
-import { getUnplayedGames, filterByPlayers, selectRandomGames } from './gameService';
-import { createGamesEmbed, createEmptyEmbed } from './embedService';
+import { getGamesFillingCount } from './gameService';
+import { createGamesEmbed, createEmptyEmbed, createGameButtons } from './embedService';
 import { loadGames } from './gameDataService';
 
 export async function postGames(
@@ -17,20 +17,21 @@ export async function postGames(
     }
 
     const sendableChannel = channel as TextChannel | NewsChannel | ThreadChannel;
-    let unplayedGames = getUnplayedGames(loadGames(), daysThreshold);
+    const allGames = loadGames();
+    const selectedGames = getGamesFillingCount(
+        allGames,
+        count,
+        daysThreshold,
+        playerCount
+    );
 
-    if (playerCount) {
-        unplayedGames = filterByPlayers(unplayedGames, playerCount);
-    }
-
-    if (unplayedGames.length === 0) {
+    if (selectedGames.length === 0) {
         const embed = createEmptyEmbed('No games found that match your criteria. You might want to add more games or adjust your filters!');
         await sendableChannel.send({ embeds: [embed] });
         return;
     }
-
-    const selectedGames = selectRandomGames(unplayedGames, count);
     const embed = createGamesEmbed(selectedGames, playerCount);
-    await sendableChannel.send({ embeds: [embed] });
+    const components = createGameButtons(selectedGames, playerCount, count);
+    await sendableChannel.send({ embeds: [embed], components });
 }
 

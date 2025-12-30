@@ -5,7 +5,9 @@ import { setupScheduledPosts } from './services/schedulerService';
 import { execute as rollCommandExecute } from './commands/roll';
 import { execute as addGameExecute } from './commands/addgame';
 import { execute as removeGameExecute, handleAutocomplete as removeGameAutocomplete } from './commands/removegame';
+import { execute as markPlayedExecute, handleAutocomplete as markPlayedAutocomplete } from './commands/markplayed';
 import { registerCommands } from './utils/setup';
+import { handleButtonInteraction } from './handlers/buttonHandler';
 
 dotenv.config();
 
@@ -31,11 +33,17 @@ client.on('interactionCreate', async interaction => {
             await addGameExecute(interaction);
         } else if (interaction.commandName === 'removegame') {
             await removeGameExecute(interaction);
+        } else if (interaction.commandName === 'markplayed') {
+            await markPlayedExecute(interaction);
         }
     } else if (interaction.isAutocomplete()) {
         if (interaction.commandName === 'removegame') {
             await removeGameAutocomplete(interaction);
+        } else if (interaction.commandName === 'markplayed') {
+            await markPlayedAutocomplete(interaction);
         }
+    } else if (interaction.isButton()) {
+        await handleButtonInteraction(interaction, config);
     }
 });
 

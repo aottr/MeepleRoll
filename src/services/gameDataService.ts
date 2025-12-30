@@ -54,3 +54,25 @@ export function removeGame(gameName: string): { success: boolean; message: strin
     return { success: true, message: `Successfully removed "${removedGame.name}" from your collection!` };
 }
 
+export function markGameAsPlayed(gameName: string): { success: boolean; message: string; game?: Game } {
+    const games = loadGames();
+    
+    const gameIndex = games.findIndex(g => g.name.toLowerCase() === gameName.toLowerCase());
+    if (gameIndex === -1) {
+        return { success: false, message: `Game "${gameName}" not found in your collection.` };
+    }
+    
+    const game = games[gameIndex];
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    
+    game.lastPlayed = today;
+    
+    saveGames(games);
+    
+    return { 
+        success: true, 
+        message: `Successfully marked "${game.name}" as played!`,
+        game 
+    };
+}
+

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, type ChatInputCommandInteraction, type SlashCommandOptionsOnlyBuilder } from 'discord.js';
-import { getUnplayedGames, filterByPlayers, selectRandomGames } from '../services/gameService';
-import { createGamesEmbed } from '../services/embedService';
+import { getGamesFillingCount } from '../services/gameService';
+import { createGamesEmbed, createGameButtons } from '../services/embedService';
 import type { BotConfig } from '../types/index';
 import { loadGames } from '../services/gameDataService';
 
@@ -35,16 +35,14 @@ export async function execute(interaction: ChatInputCommandInteraction, config: 
     const validPlayerCount = Math.min(Math.max(1, playerCount), config.maxPlayerCount);
 
     const allGames = loadGames();
-    let unplayedGames = getUnplayedGames(allGames, config.daysThreshold);
-    unplayedGames = filterByPlayers(unplayedGames, validPlayerCount);
-
-    // If no unplayed games, filter by players and return all games
-    if (unplayedGames.length === 0) {
-        unplayedGames = filterByPlayers(allGames, validPlayerCount);
-    }
-
-    const selectedGames = selectRandomGames(unplayedGames, validCount);
+    const selectedGames = getGamesFillingCount(
+        allGames,
+        validCount,
+        config.daysThreshold,
+        validPlayerCount
+    );
     const embed = createGamesEmbed(selectedGames, validPlayerCount);
-    await interaction.editReply({ embeds: [embed] });
+    const components = createGameButtons(selectedGames, validPlayerCount, validCount);
+    await interaction.editReply({ embeds: [embed], components });
 }
 
