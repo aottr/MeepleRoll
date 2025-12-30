@@ -7,21 +7,25 @@ import type { BotConfig, ConfigFile } from '../types/index';
 dotenv.config();
 
 function loadConfigFile(): ConfigFile {
-    const configPath = join(process.cwd(), 'config.yml');
+    const configPaths = [
+        join(process.cwd(), 'config', 'config.yml'),
+        join(process.cwd(), 'config.yml')
+    ];
     
-    if (!existsSync(configPath)) {
-        console.warn('config.yml not found, using defaults and environment variables');
-        return {};
+    for (const configPath of configPaths) {
+        if (!existsSync(configPath)) {
+            continue;
+        }
+        try {
+            const fileContents = readFileSync(configPath, 'utf-8');
+            const config = yaml.load(fileContents) as ConfigFile;
+            return config || {};
+        } catch (error) {
+            console.error(`Error loading config from ${configPath}:`, error);
+        }
     }
-
-    try {
-        const fileContents = readFileSync(configPath, 'utf-8');
-        const config = yaml.load(fileContents) as ConfigFile;
-        return config || {};
-    } catch (error) {
-        console.error('Error loading config.yml:', error);
-        return {};
-    }
+    console.warn('config.yml not found in config/config.yml or root, using defaults and environment variables');
+    return {};
 }
 
 function getEnvValue(key: string, defaultValue?: string): string | undefined {
